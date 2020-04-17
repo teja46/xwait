@@ -1,0 +1,29 @@
+.app {
+  .mobile-header {
+    height: 60vh;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    background-image: linear-gradient(#626cfe, #9940f1);
+  }
+  .mobile-logo {
+    img {
+      height: 150px;
+    }
+  }
+  .login-button-controls {
+    .login-btn {
+      width: 200px;
+      border-radius: 10px;
+      .google-logo {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    .signup-btn {
+      width: 50%;
+      border-radius: 0px;
+      border-bottom-left-radius: 30px;
+      border-top-left-radius: 30px;
+    }
+  }
+}

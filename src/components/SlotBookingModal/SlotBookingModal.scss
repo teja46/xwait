@@ -1,0 +1,119 @@
+.supermarket-logo {
+  width: 60px;
+}
+
+.store-address {
+  margin: 2px 15px;
+}
+
+.confirmation-show {
+  &.modal-backdrop {
+    opacity: 1 !important;
+  }
+  &.slot-selection-modal {
+    opacity: 0.5;
+  }
+}
+
+.slot-selection-modal {
+  .modal-dialog {
+    padding: 0;
+    margin: 0;
+    .modal-content {
+      height: 100vh;
+      width: 100vw;
+      .modal-header {
+        background-image: linear-gradient(#626cfe, #9940f1);
+        color: #ffffff;
+        .modal-title {
+          font-size: 16px;
+        }
+      }
+      .modal-body {
+        background: #e7e7e7;
+
+        .slot-card {
+          width: 90%;
+          background: #fff;
+          border-radius: 10px;
+          min-height: 600px;
+          max-height: 600px;
+          overflow: scroll;
+
+          .super-market-details {
+            .store-address {
+              margin: 2px 15px;
+              .super-market-name {
+                font-size: 16px;
+                font-weight: bold;
+              }
+
+              .super-market-location {
+                font-size: 12px;
+              }
+            }
+          }
+          .date-picker {
+            padding: 5px;
+            .DatePicker_dateLabel__GO7dX {
+              font-size: 12px;
+            }
+          }
+          .slots-spread {
+            margin: 10px 12.5%;
+            button {
+              margin: 10px;
+              border: 1px solid #ccc;
+              background: transparent;
+            }
+          }
+        }
+      }
+
+      .modal-footer {
+        display: none;
+      }
+    }
+  }
+}
+.confirmation {
+  z-index: 1500;
+  height: 250px;
+  width: 100%;
+  background: #fff;
+  transform: none !important;
+
+  .confirmation-details {
+    padding: 20px;
+    .confirmation-heading {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .date-time {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  .confirm-action {
+    button {
+      width: 50%;
+      border: 1px solid #eee;
+      height: 40px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid #c7c7c7;
+      border-radius: 5px;
+    }
+
+    .confirm-btn {
+      background: #626cfe;
+      color: #ffffff;
+    }
+  }
+}
