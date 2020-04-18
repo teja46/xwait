@@ -2,7 +2,7 @@ import firebase from "firebase";
 import config from "../configs/firebase.config";
 import { apiUrl } from "../constants/constants";
 import axios from "axios";
-const googleLogin = async () => {
+export const googleLogin = async () => {
   firebase.initializeApp(config);
   let provider = new firebase.auth.GoogleAuthProvider();
   const authRes = await firebase.auth().signInWithPopup(provider);
@@ -17,5 +17,14 @@ const googleLogin = async () => {
   );
   return firebasePost;
 };
-
-export default googleLogin;
+export const appLogout = () => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      return true;
+    })
+    .catch(err => {
+      return err;
+    });
+};

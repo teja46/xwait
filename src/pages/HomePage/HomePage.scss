@@ -1,16 +1,22 @@
 .home-page {
   .cards-section {
-    margin: 10px;
+    padding: 5px;
+  }
+  .header-component {
+    box-shadow: 0 4px 6px #eaeaea;
+    margin-bottom: 30px;
   }
   .store-types {
-    background-image: linear-gradient(#626cfe, #9940f1);
-    min-height: 300px;
-    border-radius: 10px;
+    background-color: #626cfe;
+    padding:40px 0;
 
     input {
       margin: 10px;
-      border-radius: 20px;
+      border-radius: 5px;
       padding: 10px;
+      min-width: 100%;
+      margin: 0px 0 40px;
+      border: none;
     }
     .store-image {
       width: 60px;
@@ -18,8 +24,18 @@
       background: #eee;
       border-radius: 100%;
     }
+
+    .titles {
+      color:#fff;
+      margin-top: 10px;
+      letter-spacing: 1.2px;
+      font-size: 12px;
+    }
   }
   .all-places {
     font-weight: bold;
+  }
+  .showPlaces {
+    margin-top: 30px;
   }
 }

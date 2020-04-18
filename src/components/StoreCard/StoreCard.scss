@@ -1,17 +1,21 @@
 .card-section {
-  padding: 0;
+  padding: 0 !important;
   margin-bottom: 10px;
 
   .store-card {
-    border: 2px solid #f1f1f1;
-    border-radius: 10px;
-    margin: 10px 10px;
+    border: 2px solid #f9f9f9;
+    border-radius: 5px;
+    margin: 5px 10px;
     padding: 0px !important;
 
     .card-heading {
       padding: 10px 15px;
       padding-bottom: 0px;
 
+      > div {
+        
+        padding:0 12px 5px 5px;
+      }
       .store-image {
         width: 100%;
       }
@@ -19,23 +23,26 @@
       .store-details {
         .store-name {
           color: #3b3e50;
+          font-size: 16px;
         }
 
         .store-location {
           font-size: 12px;
           font-weight: bold;
           margin-bottom: 15px;
-        }
+        } 
 
         .store-stats {
           margin: 5px 0;
           font-size: 10px;
-          span {
-            margin-right: 10px;
-          }
+
           .icons {
             width: 15px;
             height: 15px;
+            margin-right: 2px;
+          }
+          .store-rating {
+            margin-right:15px;
           }
 
           .store-timings {
@@ -57,29 +64,50 @@
 
     .card-action {
       font-size: 12px;
-      margin: 10px 0;
+      margin: 10px 0 12px;
       .sponsored-section {
         background: #fcf4e4;
         padding: 5px 25px;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
-      }
+      }  
 
       .booknow-section {
-        margin-right: 20px;
+        margin-right: 12px;
         button {
-          background: #626cfe;
-          border: 1px solid #959595;
+          background: #fff;
+          border: none;
           padding: 5px 25px;
-          border-radius: 5px;
-          color: white;
+          color: #626cfe;
           font-size: 12px;
           font-weight: bold;
+          box-sizing: border-box;
+          border: 1px solid  #626cfe;
+          position: relative;
+          z-index: 1;
           &:hover {
-            color: #5063ad;
-            background: white;
+            color: #fff;
+          }
+          &:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleY(0);
+            transform-origin: bottom center;
+            background: #626cfe;
+            z-index: -1;
+            transition: transform 0.3s;
+          }
+          
+          &:hover::after {
+            transform: scaleY(1);
           }
         }
+
+        
       }
     }
   }

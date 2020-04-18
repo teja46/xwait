@@ -3,23 +3,34 @@ import "./App.scss";
 import xWaitLogo from "./assets/images/xwaitblack-logo.png";
 import googleLogo from "./assets/images/google-logo.png";
 import { Button } from "react-bootstrap";
-import googleLogin from "./login/googleLogin";
+import { googleLogin } from "./login/googleLogin";
 import HomePage from "./pages/HomePage/HomePage";
+import { setCookie, getCookie, destroyCookie } from "./utils/utils";
 
 function App() {
   const [showHome, setShowHome] = React.useState(false);
+  React.useEffect(() => {
+    if (getCookie("xwaitUsr").length) {
+      setShowHome(true);
+    }
+  }, []);
+
   const loginWithGoogle = () => {
     googleLogin()
       .then(res => {
-        console.log(res);
+        setCookie(res.data.userId);
         setShowHome(true);
       })
       .catch(err => alert(err.message));
   };
 
+  const logout = () => {
+    destroyCookie("xwaitUsr");
+    setShowHome(false);
+  };
   return (
     <div className="app">
-      {showHome && (
+      {!showHome && (
         <>
           <header>
             <div className="mobile-header d-sm-flex d-xs-flex d-md-none d-lg-none"></div>
@@ -48,7 +59,7 @@ function App() {
           </div>
         </>
       )}
-      {!showHome && <HomePage showBooking={showHome} />}
+      {showHome && <HomePage showBooking={showHome} logout={() => logout()} />}
     </div>
   );
 }

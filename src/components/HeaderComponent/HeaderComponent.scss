@@ -13,3 +13,36 @@
 .user-menu {
   background: #f2f2f2;
 }
+
+.confirmation-details {
+  .booking-card {
+    border: 2px solid #f2f2f2;
+    border-radius: 5px;
+    padding: 10px;
+  }
+
+  .store-name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .store-address {
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .booking-time {
+    font-size: 16x;
+    font-weight: bold;
+  }
+
+  .booking-id {
+    font-weight: bold;
+    font-size: 37px;
+  }
+
+  .booking-action {
+    border-top: 1px solid black;
+    padding-top: 10px;
+  }
+}

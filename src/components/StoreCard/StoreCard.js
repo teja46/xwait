@@ -7,7 +7,6 @@ import timeIcon from "../../assets/images/time-icon.png";
 import SlotBookingModal from "../SlotBookingModal/SlotBookingModal";
 function StoreCard(props) {
   const [showBooking, setShowBooking] = React.useState(false);
-  console.log("hi..");
   return (
     <div className="col-sm-12 col-md-4 card-section">
       <div className="store-card">
@@ -25,13 +24,14 @@ function StoreCard(props) {
               {props.storeDetails.storeAddress}
             </div>
             <div className="store-stats d-flex align-items-center justify-content-between">
-              <div>
-                <span className="store-rating">
-                  <img src={ratingIcon} alt="rating" className="icons" /> 4.2
+              <div className="d-flex align-items-center justify-content-between">
+                <span className="store-rating d-flex align-items-center justify-content-between">
+                  <img src={ratingIcon} alt="rating" className="icons" />{" "}
+                  <span className="ratingDigit">4.2</span>
                 </span>
-                <span className="store-distance">
-                  <img src={locationIcon} alt="rating" className="icons" /> 5
-                  kms
+                <span className="store-distance d-flex align-items-center justify-content-between">
+                  <img src={locationIcon} alt="rating" className="icons" />{" "}
+                  <span className="ratingDigit">5 kms</span>
                 </span>
               </div>
               <div className="store-timings d-flex">
@@ -55,6 +55,7 @@ function StoreCard(props) {
       {
         <SlotBookingModal
           showBooking={showBooking}
+          storeDetails={props.storeDetails}
           onHide={() => setShowBooking(false)}
           confirm={() => setShowBooking(false)}
         />

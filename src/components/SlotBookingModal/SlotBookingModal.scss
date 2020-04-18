@@ -23,7 +23,7 @@
       height: 100vh;
       width: 100vw;
       .modal-header {
-        background-image: linear-gradient(#626cfe, #9940f1);
+        background-color: #626cfe;
         color: #ffffff;
         .modal-title {
           font-size: 16px;
@@ -36,9 +36,8 @@
           width: 90%;
           background: #fff;
           border-radius: 10px;
-          min-height: 600px;
-          max-height: 600px;
           overflow: scroll;
+          padding: 20px;
 
           .super-market-details {
             .store-address {
@@ -63,8 +62,44 @@
             margin: 10px 12.5%;
             button {
               margin: 10px;
-              border: 1px solid #ccc;
               background: transparent;
+              margin: 10px;
+              border: 1px solid #ece9e9;
+              background: transparent;
+              color: #444343;
+              border-top: 2px solid #626cfe;
+              font-size: 14px;
+              letter-spacing: 1.2px;
+              font-weight: 600;
+              padding: 5px 10px;
+              min-width: 100px;
+              position: relative;
+              z-index: 1;
+
+              .remaining-slots {
+                font-size: 8px;
+              }
+
+              &:hover {
+                color: #fff;
+              }
+              &:after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                transform: scaleY(0);
+                transform-origin: bottom center;
+                background: #626cfe;
+                z-index: -1;
+                transition: transform 0.3s;
+              }
+
+              &:hover::after {
+                transform: scaleY(1);
+              }
             }
           }
         }
@@ -78,7 +113,6 @@
 }
 .confirmation {
   z-index: 1500;
-  height: 250px;
   width: 100%;
   background: #fff;
   transform: none !important;
@@ -86,23 +120,34 @@
   .confirmation-details {
     padding: 20px;
     .confirmation-heading {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
       margin-bottom: 20px;
     }
+
     .date-time {
       font-size: 20px;
       font-weight: bold;
     }
   }
+  .super-market-details {
+    .store-address {
+      .super-market-name {
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+  }
 
   .confirm-action {
+    margin: 10px;
     button {
       width: 50%;
       border: 1px solid #eee;
       height: 40px;
       font-weight: bold;
       font-size: 14px;
+      border-radius: 10px;
     }
 
     .cancel-btn {
