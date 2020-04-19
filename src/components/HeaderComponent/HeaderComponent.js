@@ -7,32 +7,40 @@ import getBookedSlots from "../../dbCalls/getBookedSlots";
 import { getCookie } from "../../utils/utils";
 import moment from "moment";
 import redeemBooking from "../../dbCalls/redeemBooking";
+import LoadingOverlay from "react-loading-overlay";
 
 function HeaderComponent(props) {
   const userMenu = React.useRef(null);
   const [showOverlay, setShowOverlay] = React.useState(false);
   const [showBookings, setShowBookings] = React.useState(false);
+  const [loader, setLoader] = React.useState(false);
   const [bookings, setBookings] = React.useState();
 
   const getBookings = () => {
+    setLoader(true);
+    setShowBookings(true);
     getBookedSlots(getCookie("xwaitUsr"))
       .then(res => {
-        setShowBookings(true);
         console.log(res);
+        setLoader(false);
         setBookings(res.data);
       })
       .catch(err => {
+        setLoader(false);
         console.log(err);
       });
   };
 
   const completeBooking = id => {
+    setLoader(true);
     redeemBooking(id)
       .then(res => {
+        setLoader(false);
         alert("Booking Redeemed");
         setShowBookings(false);
       })
       .catch(err => {
+        setLoader(false);
         alert(err.message);
       });
   };
@@ -78,53 +86,55 @@ function HeaderComponent(props) {
         onHide={() => setShowBookings(false)}
         centered
       >
-        <div className="confirmation d-flex flex-column">
-          <div className="confirmation-details d-flex flex-column">
-            <div className="confirmation-heading">Your Bookings</div>
-            <hr />
-            <div>
-              {bookings &&
-                bookings.map((booking, id) => (
-                  <div className="booking-card" key={id}>
-                    <div className="d-flex justify-content-between">
-                      <div>
-                        <div className="store-name">{booking.storeName}</div>
-                        <div className="store-address">
-                          {booking.storeAddress}
+        <LoadingOverlay active={loader} spinner>
+          <div className="confirmation d-flex flex-column">
+            <div className="confirmation-details d-flex flex-column">
+              <div className="confirmation-heading">Your Bookings</div>
+              <hr />
+              <div>
+                {bookings &&
+                  bookings.map((booking, id) => (
+                    <div className="booking-card" key={id}>
+                      <div className="d-flex justify-content-between">
+                        <div>
+                          <div className="store-name">{booking.storeName}</div>
+                          <div className="store-address">
+                            {booking.storeAddress}
+                          </div>
+                          <div className="booking-time">
+                            {moment(booking.slotDate).format("Do, MMMM YYYY")},{" "}
+                            {booking.slotTime}
+                          </div>
                         </div>
-                        <div className="booking-time">
-                          {moment(booking.slotDate).format("Do, MMMM YYYY")},{" "}
-                          {booking.slotTime}
+                        <div>
+                          <div>Booking ID</div>
+                          <div className="booking-id">{booking.bookingId}</div>
                         </div>
                       </div>
                       <div>
-                        <div>Booking ID</div>
-                        <div className="booking-id">{booking.bookingId}</div>
+                        Booking Status:{" "}
+                        <b>
+                          {booking.bookingStatus
+                            ? booking.slotCompleted
+                              ? "Completed"
+                              : "Accepted by store"
+                            : "Pending"}
+                        </b>
                       </div>
+                      {!booking.slotCompleted && booking.bookingStatus && (
+                        <div className="d-flex align-items-center justify-content-end booking-action">
+                          {/* <Button variant="light">Cancel</Button> */}
+                          <Button onClick={() => completeBooking(booking.id)}>
+                            Redeem
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      Booking Status:{" "}
-                      <b>
-                        {booking.bookingStatus
-                          ? booking.slotCompleted
-                            ? "Completed"
-                            : "Accepted by store"
-                          : "Pending"}
-                      </b>
-                    </div>
-                    {!booking.slotCompleted && booking.bookingStatus && (
-                      <div className="d-flex align-items-center justify-content-end booking-action">
-                        {/* <Button variant="light">Cancel</Button> */}
-                        <Button onClick={() => completeBooking(booking.id)}>
-                          Redeem
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
+        </LoadingOverlay>
       </Modal>
     </div>
   );

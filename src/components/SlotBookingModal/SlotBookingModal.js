@@ -7,24 +7,26 @@ import getSlots from "../../dbCalls/getSlots";
 import confirmSlot from "../../dbCalls/confirmSlot";
 import moment from "moment";
 import { getCookie } from "../../utils/utils";
-
+import LoadingOverlay from "react-loading-overlay";
 function SlotBookingModal(props) {
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [slotDetails, setSlotDetails] = React.useState([]);
   const [selectedSlot, setSelectedSlot] = React.useState();
+  const [loader, setLoader] = React.useState(true);
   const selectedDay = val => {
     let dt = new Date(val);
     dt.setHours(0, 0, 0, 0);
     getSlots(props.storeDetails.id, dt.toISOString())
       .then(slots => {
         setSlotDetails(slots.data.slots);
-        console.log(slots);
+        setLoader(false);
       })
       .catch(err => {
         console.log(err);
       });
   };
   const confirmBooking = (slotData, storeDetails) => {
+    setLoader(true);
     const slotDetails = {
       slotId: slotData.slotId,
       slotTime: slotData.data.slotTime,
@@ -38,9 +40,10 @@ function SlotBookingModal(props) {
       .then(res => {
         setShowConfirmation(false);
         props.onHide();
+        setLoader(false);
       })
       .catch(err => {
-        console.log(err);
+        setLoader(false);
         alert(err.message);
       });
   };
@@ -64,46 +67,51 @@ function SlotBookingModal(props) {
           showConfirmation ? "confirmation-show" : ""
         }`}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Select a time slot</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="d-flex justify-content-center align-items-start modal-body">
-          <div className="slot-card">
-            <div className="super-market-details d-flex align-items-center">
-              <div className="image-section">
-                <img
-                  src={ratnadeepImage}
-                  className="supermarket-logo"
-                  alt="market-im"
+        <LoadingOverlay active={loader} spinner>
+          <Modal.Header closeButton>
+            <Modal.Title>Select a time slot</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="d-flex justify-content-center align-items-start modal-body">
+            <div className="slot-card">
+              <div className="super-market-details d-flex align-items-center">
+                <div className="image-section">
+                  <img
+                    src={ratnadeepImage}
+                    className="supermarket-logo"
+                    alt="market-im"
+                  />
+                </div>
+                <div className="store-address">
+                  <div className="super-market-name">
+                    {props.storeDetails.name}
+                  </div>
+                  <div className="super-market-location">
+                    {props.storeDetails.storeAddress}
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div className="date-picker">
+                <DatePicker
+                  getSelectedDay={selectedDay}
+                  labelFormat={"MMMM"}
+                  color={"#374e8c"}
                 />
               </div>
-              <div className="store-address">
-                <div className="super-market-name">
-                  {props.storeDetails.name}
-                </div>
-                <div className="super-market-location">
-                  {props.storeDetails.storeAddress}
-                </div>
+              <div className="slots-spread">
+                {slotDetails &&
+                  slotDetails.map((slot, id) => (
+                    <button
+                      onClick={() => showConfirmationModal(slot)}
+                      key={id}
+                    >
+                      {slot.data.slotTime}
+                    </button>
+                  ))}
               </div>
             </div>
-            <hr />
-            <div className="date-picker">
-              <DatePicker
-                getSelectedDay={selectedDay}
-                labelFormat={"MMMM"}
-                color={"#374e8c"}
-              />
-            </div>
-            <div className="slots-spread">
-              {slotDetails &&
-                slotDetails.map((slot, id) => (
-                  <button onClick={() => showConfirmationModal(slot)} key={id}>
-                    {slot.data.slotTime}
-                  </button>
-                ))}
-            </div>
-          </div>
-        </Modal.Body>
+          </Modal.Body>
+        </LoadingOverlay>
       </Modal>
       <Modal
         show={showConfirmation}
@@ -111,51 +119,53 @@ function SlotBookingModal(props) {
         onHide={() => setShowConfirmation(false)}
         centered
       >
-        <div className="confirmation d-flex flex-column">
-          <div className="confirmation-details d-flex flex-column">
-            <div className="confirmation-heading">Confirm your booking</div>
-            <hr />
+        <LoadingOverlay active={loader} spinner>
+          <div className="confirmation d-flex flex-column">
+            <div className="confirmation-details d-flex flex-column">
+              <div className="confirmation-heading">Confirm your booking</div>
+              <hr />
 
-            <div className="super-market-details d-flex align-items-start">
-              <div className="image-section">
-                <img
-                  src={ratnadeepImage}
-                  className="supermarket-logo"
-                  alt="market-im"
-                />
+              <div className="super-market-details d-flex align-items-start">
+                <div className="image-section">
+                  <img
+                    src={ratnadeepImage}
+                    className="supermarket-logo"
+                    alt="market-im"
+                  />
+                </div>
+                <div className="store-address">
+                  <div className="super-market-name">
+                    {props.storeDetails.name}
+                  </div>
+                  <div className="super-market-location">
+                    {props.storeDetails.storeAddress}
+                  </div>
+                </div>
               </div>
-              <div className="store-address">
-                <div className="super-market-name">
-                  {props.storeDetails.name}
+              <div className="date-time">
+                <div>
+                  {selectedSlot &&
+                    moment(selectedSlot.data.slotDate).format("Do, MMMM YYYY")}
                 </div>
-                <div className="super-market-location">
-                  {props.storeDetails.storeAddress}
-                </div>
+                <div>{selectedSlot && selectedSlot.data.slotTime}</div>
               </div>
             </div>
-            <div className="date-time">
-              <div>
-                {selectedSlot &&
-                  moment(selectedSlot.data.slotDate).format("Do, MMMM YYYY")}
-              </div>
-              <div>{selectedSlot && selectedSlot.data.slotTime}</div>
+            <div className="confirm-action">
+              <button
+                onClick={() => setShowConfirmation(false)}
+                className="cancel-btn"
+              >
+                Cancel
+              </button>
+              <button
+                className="confirm-btn"
+                onClick={() => confirmBooking(selectedSlot, props.storeDetails)}
+              >
+                Confirm
+              </button>
             </div>
           </div>
-          <div className="confirm-action">
-            <button
-              onClick={() => setShowConfirmation(false)}
-              className="cancel-btn"
-            >
-              Cancel
-            </button>
-            <button
-              className="confirm-btn"
-              onClick={() => confirmBooking(selectedSlot, props.storeDetails)}
-            >
-              Confirm
-            </button>
-          </div>
-        </div>
+        </LoadingOverlay>
       </Modal>
     </div>
   );
