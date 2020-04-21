@@ -3,14 +3,19 @@
     padding: 5px;
   }
   .header-component {
-    box-shadow: 0 4px 6px #eaeaea;
+    // box-shadow: 0 4px 6px #eaeaea;
     margin-bottom: 30px;
+    position: fixed;
+    width: 100%;
+    background: #fff;
   }
   .store-types {
     background-color: #626cfe;
-    padding:40px 0;
-
-    input {
+    padding: 40px 0;
+    .container {
+      margin-top: 80px;
+    }
+    .search-field {
       margin: 10px;
       border-radius: 5px;
       padding: 10px;
@@ -18,21 +23,27 @@
       margin: 0px 0 40px;
       border: none;
     }
-    .store-image {
-      width: 60px;
-      height: 60px;
-      background: #eee;
-      border-radius: 100%;
-    }
+    .category {
+      cursor: pointer;
+      .store-image {
+        width: 60px;
+        height: 60px;
+        background: #eee;
+        padding: 15px;
+        border-radius: 100%;
+      }
 
-    .titles {
-      color:#fff;
-      margin-top: 10px;
-      letter-spacing: 1.2px;
-      font-size: 12px;
+      .titles {
+        color: #fff;
+        margin-top: 10px;
+        letter-spacing: 1.2px;
+        font-size: 12px;
+        font-weight: bold;
+      }
     }
   }
   .all-places {
+    text-transform: capitalize;
     font-weight: bold;
   }
   .showPlaces {

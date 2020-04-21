@@ -14,11 +14,24 @@
   background: #f2f2f2;
 }
 
+.bookings-modal {
+  .modal-header {
+    background-color: #626cfe;
+    color: #ffffff;
+  }
+  .tabs-pane {
+    margin-top: 10px;
+  }
+}
+
 .confirmation-details {
   .booking-card {
     border: 2px solid #f2f2f2;
     border-radius: 5px;
     padding: 10px;
+    .cancel-booking {
+      margin-right: 10px;
+    }
   }
 
   .store-name {

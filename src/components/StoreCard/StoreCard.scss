@@ -13,8 +13,7 @@
       padding-bottom: 0px;
 
       > div {
-        
-        padding:0 12px 5px 5px;
+        padding: 0 12px 5px 5px;
       }
       .store-image {
         width: 100%;
@@ -30,7 +29,7 @@
           font-size: 12px;
           font-weight: bold;
           margin-bottom: 15px;
-        } 
+        }
 
         .store-stats {
           margin: 5px 0;
@@ -42,7 +41,7 @@
             margin-right: 2px;
           }
           .store-rating {
-            margin-right:15px;
+            margin-right: 15px;
           }
 
           .store-timings {
@@ -70,7 +69,7 @@
         padding: 5px 25px;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
-      }  
+      }
 
       .booknow-section {
         margin-right: 12px;
@@ -80,9 +79,10 @@
           padding: 5px 25px;
           color: #626cfe;
           font-size: 12px;
+          border-radius: 5px;
           font-weight: bold;
           box-sizing: border-box;
-          border: 1px solid  #626cfe;
+          border: 1px solid #626cfe;
           position: relative;
           z-index: 1;
           &:hover {
@@ -101,13 +101,11 @@
             z-index: -1;
             transition: transform 0.3s;
           }
-          
+
           &:hover::after {
             transform: scaleY(1);
           }
         }
-
-        
       }
     }
   }

@@ -55,6 +55,7 @@ function StoreCard(props) {
       {
         <SlotBookingModal
           showBooking={showBooking}
+          userId={props.userId}
           storeDetails={props.storeDetails}
           onHide={() => setShowBooking(false)}
           confirm={() => setShowBooking(false)}
