@@ -7,6 +7,7 @@ import getBookedSlots from "../../dbCalls/getBookedSlots";
 import moment from "moment";
 import redeemBooking from "../../dbCalls/redeemBooking";
 import cancelBooking from "../../dbCalls/cancelBooking";
+import DisplayFeedbackModal from "../DisplayFeedback/DisplayFeedback";
 import LoadingOverlay from "react-loading-overlay";
 
 function HeaderComponent(props) {
@@ -15,6 +16,9 @@ function HeaderComponent(props) {
   const [showBookings, setShowBookings] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
   const [bookings, setBookings] = React.useState();
+  const [displayFeedback, setDisplayFeedback] = React.useState(false);
+  const [selectedBooking, setSelectedBooking] = React.useState();
+
   const getBookings = type => {
     setLoader(true);
     setShowBookings(true);
@@ -55,6 +59,12 @@ function HeaderComponent(props) {
         setLoader(false);
         alert(err.message);
       });
+  };
+
+  const showFeedback = booking => {
+    setShowBookings(false);
+    setDisplayFeedback(true);
+    setSelectedBooking(booking);
   };
 
   return (
@@ -139,8 +149,11 @@ function HeaderComponent(props) {
                             {booking.storeAddress}
                           </div>
                           <div className="booking-time">
-                            {moment(booking.slotDate).format("Do, MMMM YYYY")},{" "}
-                            {moment(booking.slotTime).format("hh:mm a")}
+                            {booking.serviceType}
+                            <div>
+                              {moment(booking.slotDate).format("Do, MMMM YYYY")}
+                              , {moment(booking.slotTime).format("hh:mm a")}
+                            </div>
                           </div>
                         </div>
                         <div>
@@ -154,7 +167,15 @@ function HeaderComponent(props) {
                           <span>{booking.bookingStatus}</span>
                         </b>
                       </div>
+
                       <div className="d-flex align-items-center justify-content-end booking-action">
+                        <Button
+                          variant="light"
+                          className="mr-2"
+                          onClick={() => showFeedback(booking)}
+                        >
+                          Give Feedback
+                        </Button>
                         {booking.bookingStatus !== "Cancelled" &&
                           booking.bookingStatus !== "Redeemed" && (
                             <div className="cancel-booking">
@@ -178,6 +199,13 @@ function HeaderComponent(props) {
           </div>
         </LoadingOverlay>
       </Modal>
+      {displayFeedback && (
+        <DisplayFeedbackModal
+          show={displayFeedback}
+          booking={selectedBooking}
+          hide={() => setDisplayFeedback(false)}
+        />
+      )}
     </div>
   );
 }

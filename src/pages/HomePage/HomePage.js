@@ -4,6 +4,7 @@ import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 import StoreCard from "../../components/StoreCard/StoreCard";
 import getStores from "../../dbCalls/getStores";
 import getCategories from "../../dbCalls/getCategories";
+import { Toast } from "react-bootstrap";
 // import geoLocation from "../../location/geolocation";
 import LoadingOverlay from "react-loading-overlay";
 import debounce from "debounce";
@@ -21,7 +22,7 @@ function HomePage(props) {
   const [loader, setLoader] = React.useState(true);
   const [allCategories, setAllCategories] = React.useState([]);
   const [categoryType, setCategoryType] = React.useState("All Categories");
-
+  const [showToast, setShowToast] = React.useState(false);
   // geoLocation();
   React.useEffect(() => {
     async function fetchData() {
@@ -63,12 +64,14 @@ function HomePage(props) {
         alert(err);
       });
   };
+
   const debouncedFn = debounce(event => {
     let searchString = event.target.value;
     let res = filterResults(allCategories, searchString);
     setStores(res);
     setLoader(false);
   }, 800);
+
   const searchFields = event => {
     event.persist();
     setLoader(true);
@@ -167,11 +170,34 @@ function HomePage(props) {
           <div className="cards-section row d-flex justify-content-center">
             {stores.length === 0 && !loader && "Sorry!! No Results Found!!"}
             {stores.map((store, id) => (
-              <StoreCard key={id} storeDetails={store} userId={props.userId} />
+              <StoreCard
+                key={id}
+                storeDetails={store}
+                userId={props.userId}
+                showToast={() => setShowToast(true)}
+              />
             ))}{" "}
           </div>
         </div>
       </div>
+      {showToast && (
+        <Toast
+          show={showToast}
+          className="success-booking"
+          onClose={() => setShowToast(false)}
+          autohide
+        >
+          <Toast.Header closeButton={true}>
+            <strong className="mr-auto">Booking Successful</strong>
+          </Toast.Header>
+          <Toast.Body>
+            <div>
+              Your booking has been successfully submitted to store. Please
+              check under my bookings for booking status
+            </div>
+          </Toast.Body>
+        </Toast>
+      )}
     </LoadingOverlay>
   );
 }

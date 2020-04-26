@@ -4,13 +4,23 @@ import ratnadeepImage from "../../assets/images/ratnadeep.png";
 import ratingIcon from "../../assets/images/rating-icon.png";
 import locationIcon from "../../assets/images/location-icon.png";
 import timeIcon from "../../assets/images/time-icon.png";
-import SlotBookingModal from "../SlotBookingModal/SlotBookingModal";
+import StoreDetailsModal from "../StoreDetailsModal/StoreDetailsModal";
+
 function StoreCard(props) {
-  const [showBooking, setShowBooking] = React.useState(false);
+  const [showStoreDetailsModal, setShowStoreDetailsModal] = React.useState(
+    false
+  );
+  const bookingSuccess = () => {
+    setShowStoreDetailsModal(false);
+    props.showToast();
+  };
   return (
     <div className="col-sm-12 col-md-4 card-section">
       <div className="store-card">
-        <div className="row card-heading">
+        <div
+          className="row card-heading"
+          onClick={() => setShowStoreDetailsModal(true)}
+        >
           <div className="col-3 d-flex align-items-start">
             <img
               src={ratnadeepImage}
@@ -27,7 +37,9 @@ function StoreCard(props) {
               <div className="d-flex align-items-center justify-content-between">
                 <span className="store-rating d-flex align-items-center justify-content-between">
                   <img src={ratingIcon} alt="rating" className="icons" />{" "}
-                  <span className="ratingDigit">4.2</span>
+                  <span className="ratingDigit">
+                    {props.storeDetails.rating}
+                  </span>
                 </span>
                 <span className="store-distance d-flex align-items-center justify-content-between">
                   <img src={locationIcon} alt="rating" className="icons" />{" "}
@@ -36,7 +48,9 @@ function StoreCard(props) {
               </div>
               <div className="store-timings d-flex">
                 <img src={timeIcon} alt="rating" className="icons" />
-                <span className="timing">10am - 6pm</span>
+                <span className="timing">
+                  {props.storeDetails.startTime} - {props.storeDetails.endTime}
+                </span>
               </div>
             </div>
             <div className="store-description">
@@ -46,21 +60,17 @@ function StoreCard(props) {
         </div>
         <div className="card-action d-flex justify-content-between align-items-center">
           <div className="sponsored-section">Sponsored</div>
-          <div className="booknow-section">
-            <button onClick={() => setShowBooking(true)}>Book Now</button>
-          </div>
         </div>
       </div>
 
-      {
-        <SlotBookingModal
-          showBooking={showBooking}
-          userId={props.userId}
+      {showStoreDetailsModal && (
+        <StoreDetailsModal
           storeDetails={props.storeDetails}
-          onHide={() => setShowBooking(false)}
-          confirm={() => setShowBooking(false)}
+          userId={props.userId}
+          close={() => setShowStoreDetailsModal(false)}
+          bookingSuccess={() => bookingSuccess()}
         />
-      }
+      )}
     </div>
   );
 }

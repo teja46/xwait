@@ -5,7 +5,7 @@ import googleLogo from "./assets/images/google-logo.png";
 import { Button } from "react-bootstrap";
 import { googleLogin, appLogout } from "./login/googleLogin";
 import HomePage from "./pages/HomePage/HomePage";
-// import { setCookie } from "./utils/utils";
+import updateUserToken from "./dbCalls/updateUserToken";
 import firebase from "firebase";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -23,17 +23,42 @@ function App() {
       })
       .catch(err => alert(err.message));
   };
+  const updateToken = (userId, token) => {
+    updateUserToken(userId, token)
+      .then(res => {
+        console.log("updated");
+      })
+      .catch(err => {
+        console.log("Error!!");
+      });
+  };
 
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      setShowHome(true);
-      setLoader(false);
-      setUserId(user.uid);
-    } else {
-      setShowHome(false);
-      setLoader(false);
-    }
-  });
+  React.useEffect(() => {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        setShowHome(true);
+        setLoader(false);
+        setUserId(user.uid);
+        const messaging = firebase.messaging();
+        messaging
+          .requestPermission()
+          .then(() => {
+            return messaging.getToken();
+          })
+          .then(token => {
+            console.log(token);
+            updateToken(user.uid, token);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        setShowHome(false);
+        setLoader(false);
+      }
+    });
+  }, []);
+
   const logout = () => {
     appLogout();
     setShowHome(false);

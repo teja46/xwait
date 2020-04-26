@@ -8,16 +8,18 @@ import confirmSlot from "../../dbCalls/confirmSlot";
 import moment from "moment";
 import { sortSlotDetails } from "../../utils/utils";
 import LoadingOverlay from "react-loading-overlay";
+
 function SlotBookingModal(props) {
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [slotDetails, setSlotDetails] = React.useState([]);
   const [selectedSlot, setSelectedSlot] = React.useState();
   const [loader, setLoader] = React.useState(true);
+
   const selectedDay = val => {
     let dt = new Date(val);
     dt.setHours(0, 0, 0, 0);
     setLoader(true);
-    getSlots(props.storeDetails.id, dt.toISOString())
+    getSlots(props.storeDetails.id, dt.toISOString(), props.service.serviceId)
       .then(slots => {
         const slotData = sortSlotDetails(slots.data.slots);
         console.log(slots);
@@ -35,6 +37,8 @@ function SlotBookingModal(props) {
       slotId: slotData.slotId,
       slotTime: slotData.data.slotTime,
       slotDate: slotData.data.slotDate,
+      serviceId: props.service.serviceId,
+      serviceType: props.service.serviceDetails.serviceType,
       storeId: slotData.data.storeId,
       storeName: storeDetails.name,
       storeAddress: storeDetails.storeAddress,
@@ -43,12 +47,12 @@ function SlotBookingModal(props) {
     confirmSlot(slotDetails)
       .then(res => {
         setShowConfirmation(false);
-        alert("Booking Successful");
-        props.onHide();
         setLoader(false);
+        props.bookingSuccess();
       })
       .catch(err => {
         setLoader(false);
+        console.log(err);
         alert(err.message);
       });
   };
@@ -57,12 +61,10 @@ function SlotBookingModal(props) {
     setShowConfirmation(true);
     setSelectedSlot(slotData);
   };
-  const isDisabled = slotDateISO => {
-    let slotDateStr = moment(slotDateISO).toDate();
-    let today = moment();
-    const shouldDisable = moment(today).isAfter(slotDateStr);
-    console.log(shouldDisable);
-    return shouldDisable;
+  const isDisabled = slotTime => {
+    const slotTimeDate = moment(slotTime).toDate();
+    const today = moment().toDate();
+    return today > slotTimeDate;
   };
 
   return (
@@ -76,13 +78,15 @@ function SlotBookingModal(props) {
           className={`slot-selection-modal ${
             showConfirmation ? "confirmation-show" : ""
           }`}
-          backdropClassName={`slot-booking ${
+          backdropClassName={`slot-booking slotbooking-backdrop ${
             showConfirmation ? "confirmation-show" : ""
           }`}
         >
           <LoadingOverlay active={loader} spinner>
             <Modal.Header closeButton>
-              <Modal.Title>Select a time slot</Modal.Title>
+              <Modal.Title>
+                {props.service.serviceDetails.serviceType}
+              </Modal.Title>
             </Modal.Header>
             <Modal.Body className="d-flex justify-content-center align-items-start modal-body">
               <div className="slot-card">
@@ -135,6 +139,8 @@ function SlotBookingModal(props) {
         show={showConfirmation}
         rootClose={true}
         onHide={() => setShowConfirmation(false)}
+        className="show-confirmation-modal"
+        backdropClassName="show-confirmation-backdrop"
         centered
       >
         <LoadingOverlay active={loader} spinner>

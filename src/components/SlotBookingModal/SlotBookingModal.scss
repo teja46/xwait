@@ -14,8 +14,11 @@
     opacity: 0.5;
   }
 }
-
+.slotbooking-backdrop {
+  z-index: 2100 !important;
+}
 .slot-selection-modal {
+  z-index: 2101 !important;
   .modal-dialog {
     padding: 0;
     margin: 0;
@@ -166,4 +169,11 @@
       color: #ffffff;
     }
   }
+}
+
+.show-confirmation-backdrop {
+  z-index: 2200 !important;
+}
+.show-confirmation-modal {
+  z-index: 2201 !important;
 }

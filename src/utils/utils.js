@@ -47,8 +47,8 @@ export const filterResults = (data, searchStr) => {
 export const sortSlotDetails = slotArr => {
   const arr = slotArr.sort(function(a, b) {
     console.log(a);
-    a = new Date(a.data.createdAt);
-    b = new Date(b.data.createdAt);
+    a = new Date(a.data.slotTime);
+    b = new Date(b.data.slotTime);
     return a < b ? -1 : a > b ? 1 : 0;
   });
   return arr;

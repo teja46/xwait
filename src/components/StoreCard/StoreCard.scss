@@ -9,6 +9,7 @@
     padding: 0px !important;
 
     .card-heading {
+      cursor: pointer;
       padding: 10px 15px;
       padding-bottom: 0px;
 
@@ -108,5 +109,11 @@
         }
       }
     }
+  }
+}
+.toast {
+  .toast-header {
+    background: #626cfe;
+    color: #fff;
   }
 }
