@@ -26,15 +26,24 @@
   .store-name {
     font-size: 20px;
     font-weight: bold;
+    .store-rating {
+      pointer-events: none;
+    }
   }
 
   .store-address {
     font-size: 12px;
+    width: 80%;
     margin: 0;
   }
 
   .store-timings {
     font-size: 10px;
+    .review-count {
+      font-size: 14px;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 
   .services-heading {

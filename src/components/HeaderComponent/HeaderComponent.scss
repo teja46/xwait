@@ -1,17 +1,19 @@
 .header-component {
   .x-wait-logo {
-    width: 5rem;
-    height: 5rem;
+    width: 30%;
+    height: 100%;
   }
   .user-logo {
     width: 40px;
     height: 40px;
     margin-right: 20px;
+    border-radius: 100%;
   }
 }
 
 .user-menu {
   background: #f2f2f2;
+  z-index: 10001;
 }
 
 .bookings-modal {

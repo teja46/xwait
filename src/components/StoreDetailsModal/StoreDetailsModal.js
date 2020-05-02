@@ -4,19 +4,24 @@ import "./StoreDetailsModal.scss";
 import getServices from "../../dbCalls/getServices";
 import LoadingOverlay from "react-loading-overlay";
 import SlotBookingModal from "../SlotBookingModal/SlotBookingModal";
+import DisplayStoreFeedback from "../DisplayStoreFeedback/DisplayStoreFeedback";
+import StarRatingComponent from "react-star-rating-component";
 
 export default function StoreDetailsModal(props) {
   const [services, setServices] = React.useState([]);
   const [loader, setLoader] = React.useState(true);
   const [serviceDetails, setServiceDetails] = React.useState();
   const [showBooking, setShowBooking] = React.useState(false);
+  const [showReviews, setShowReviews] = React.useState(false);
+  const [reviewCount, setReviewCount] = React.useState(0);
 
   React.useEffect(() => {
     async function fetchData() {
       getServices(props.storeDetails.id)
         .then(res => {
           console.log(res);
-          setServices(res.data);
+          setServices(res.data.serviceTypes);
+          setReviewCount(res.data.reviews);
           setLoader(false);
         })
         .catch(err => {
@@ -27,8 +32,14 @@ export default function StoreDetailsModal(props) {
   }, [props.storeDetails.id]);
 
   const showBookingModal = service => {
+    window.history.pushState({ page: "bookingModal" }, "title 3", "?page=1");
     setServiceDetails(service);
     setShowBooking(true);
+  };
+
+  const showReviewModal = () => {
+    window.history.pushState({ page: "showReview" }, "title 4", "?page=1");
+    setShowReviews(true);
   };
 
   const bookingSuccess = () => {
@@ -38,6 +49,7 @@ export default function StoreDetailsModal(props) {
 
   return (
     <Modal
+      id="store-details-show"
       show={true}
       onHide={() => props.close()}
       className="store-details"
@@ -50,7 +62,18 @@ export default function StoreDetailsModal(props) {
         <Modal.Body>
           <div className="d-flex align-items-end justify-content-between">
             <div>
-              <div className="store-name">{props.storeDetails.name}</div>
+              <div className="store-name">
+                {props.storeDetails.name}{" "}
+                <div className="store-rating d-flex">
+                  <StarRatingComponent
+                    value={props.storeDetails.rating}
+                    tarCount={5}
+                  />
+                  <span className="ml-2">
+                    {Math.floor(props.storeDetails.rating)} / 5
+                  </span>
+                </div>
+              </div>
               <div className="store-address">
                 {props.storeDetails.storeAddress}
               </div>
@@ -58,7 +81,10 @@ export default function StoreDetailsModal(props) {
             <div>
               <div>{props.storeDetails.storeRating}</div>
               <div className="store-timings">
-                <span>{props.storeDetails.startTime}</span>
+                <div className="review-count" onClick={() => showReviewModal()}>
+                  {reviewCount} Reviews
+                </div>
+                <span>{props.storeDetails.startTime}</span>-
                 <span>{props.storeDetails.endTime}</span>
               </div>
             </div>
@@ -98,16 +124,23 @@ export default function StoreDetailsModal(props) {
             Close
           </Button>
         </Modal.Footer>
-        {
-          <SlotBookingModal
-            showBooking={showBooking}
-            userId={props.userId}
-            service={serviceDetails}
+        <SlotBookingModal
+          showBooking={showBooking}
+          userDetails={props.userDetails}
+          userId={props.userId}
+          service={serviceDetails}
+          storeDetails={props.storeDetails}
+          onHide={() => setShowBooking(false)}
+          bookingSuccess={() => bookingSuccess()}
+        />
+        {showReviews && (
+          <DisplayStoreFeedback
+            showReviews={showReviews}
             storeDetails={props.storeDetails}
-            onHide={() => setShowBooking(false)}
-            bookingSuccess={() => bookingSuccess()}
+            userDetails={props.userDetails}
+            hide={() => setShowReviews(false)}
           />
-        }
+        )}
       </LoadingOverlay>
     </Modal>
   );

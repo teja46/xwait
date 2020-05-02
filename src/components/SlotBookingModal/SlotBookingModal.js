@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Form } from "react-bootstrap";
 import ratnadeepImage from "../../assets/images/ratnadeep.png";
 import "./SlotBookingModal.scss";
 import DatePicker from "react-horizontal-datepicker";
@@ -14,6 +14,10 @@ function SlotBookingModal(props) {
   const [slotDetails, setSlotDetails] = React.useState([]);
   const [selectedSlot, setSelectedSlot] = React.useState();
   const [loader, setLoader] = React.useState(true);
+  const [number, setNumber] = React.useState();
+  const [instructions, setInstructions] = React.useState();
+  const [userName, setUserName] = React.useState(props.userDetails.name);
+  const [userEmail, setUserEmail] = React.useState(props.userDetails.email);
 
   const selectedDay = val => {
     let dt = new Date(val);
@@ -42,7 +46,11 @@ function SlotBookingModal(props) {
       storeId: slotData.data.storeId,
       storeName: storeDetails.name,
       storeAddress: storeDetails.storeAddress,
-      userId: props.userId
+      userId: props.userId,
+      userName,
+      userEmail,
+      number,
+      instructions
     };
     confirmSlot(slotDetails)
       .then(res => {
@@ -58,9 +66,15 @@ function SlotBookingModal(props) {
   };
 
   const showConfirmationModal = slotData => {
+    window.history.pushState(
+      { page: "showConfirmation" },
+      "title 5",
+      "?page=1"
+    );
     setShowConfirmation(true);
     setSelectedSlot(slotData);
   };
+
   const isDisabled = slotTime => {
     const slotTimeDate = moment(slotTime).toDate();
     const today = moment().toDate();
@@ -71,6 +85,7 @@ function SlotBookingModal(props) {
     <div className="slot-booking">
       {props.showBooking && (
         <Modal
+          id="slot-booking-show"
           show={props.showBooking}
           centered
           onHide={props.onHide}
@@ -138,6 +153,7 @@ function SlotBookingModal(props) {
       <Modal
         show={showConfirmation}
         rootClose={true}
+        id="show-confirmation-show"
         onHide={() => setShowConfirmation(false)}
         className="show-confirmation-modal"
         backdropClassName="show-confirmation-backdrop"
@@ -146,36 +162,81 @@ function SlotBookingModal(props) {
         <LoadingOverlay active={loader} spinner>
           <div className="confirmation d-flex flex-column">
             <div className="confirmation-details d-flex flex-column">
-              <div className="confirmation-heading">Confirm your booking</div>
-              <hr />
+              <Modal.Header closeButton>
+                <div className="confirmation-heading">Confirm your booking</div>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="super-market-details d-flex align-items-start">
+                  <div className="image-section">
+                    <img
+                      src={ratnadeepImage}
+                      className="supermarket-logo"
+                      alt="market-im"
+                    />
+                  </div>
+                  <div className="store-address">
+                    <div className="super-market-name">
+                      {props.storeDetails.name}
+                    </div>
+                    <div className="super-market-location">
+                      {props.storeDetails.storeAddress}
+                    </div>
+                  </div>
+                </div>
+                <div className="date-time">
+                  <div>
+                    Booking Date:{" "}
+                    {selectedSlot &&
+                      moment(selectedSlot.data.slotDate).format(
+                        "Do, MMMM YYYY"
+                      )}
+                  </div>
+                  <div>
+                    Booking Time:{" "}
+                    {selectedSlot &&
+                      moment(selectedSlot.data.slotTime).format("hh:mm a")}
+                  </div>
+                </div>
+                <Form>
+                  <Form.Group controlId="formName">
+                    <Form.Control
+                      type="text"
+                      placeholder="Your Name"
+                      value={userName}
+                      onChange={e => setUserName(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formName">
+                    <Form.Control
+                      type="text"
+                      placeholder="Your Email"
+                      value={userEmail}
+                      onChange={e => setUserEmail(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formNumber">
+                    <Form.Control
+                      type="number"
+                      placeholder="Your number"
+                      onChange={e => setNumber(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formInstructions">
+                    <Form.Control
+                      as="textarea"
+                      rows="3"
+                      maxlength={120}
+                      placeholder="Any special Instructions to store?"
+                      onChange={e => setInstructions(e.target.value)}
+                    />
+                  </Form.Group>
 
-              <div className="super-market-details d-flex align-items-start">
-                <div className="image-section">
-                  <img
-                    src={ratnadeepImage}
-                    className="supermarket-logo"
-                    alt="market-im"
-                  />
-                </div>
-                <div className="store-address">
-                  <div className="super-market-name">
-                    {props.storeDetails.name}
-                  </div>
-                  <div className="super-market-location">
-                    {props.storeDetails.storeAddress}
-                  </div>
-                </div>
-              </div>
-              <div className="date-time">
-                <div>
-                  {selectedSlot &&
-                    moment(selectedSlot.data.slotDate).format("Do, MMMM YYYY")}
-                </div>
-                <div>
-                  {selectedSlot &&
-                    moment(selectedSlot.data.slotTime).format("hh:mm a")}
-                </div>
-              </div>
+                  <Form.Text className="text-muted">
+                    By clicking on confirm booking you accept our terms and
+                    conditions.
+                  </Form.Text>
+                </Form>
+              </Modal.Body>
             </div>
             <div className="confirm-action">
               <button

@@ -8,21 +8,42 @@
     position: fixed;
     width: 100%;
     background: #fff;
+    z-index: 10000;
+    padding: 10px 0;
   }
   .store-types {
     background-color: #626cfe;
     padding: 40px 0;
     .container {
       margin-top: 80px;
+
+      .mobile-categories {
+        .category {
+          margin: 10px 10px;
+        }
+      }
     }
-    .search-field {
-      margin: 10px;
-      border-radius: 5px;
-      padding: 10px;
-      min-width: 100%;
-      margin: 0px 0 40px;
-      border: none;
+    .search-section {
+      .search-field {
+        border-radius: 5px;
+        padding: 10px;
+        border: none;
+        width: 70%;
+        margin: 0;
+
+        &:focus {
+          outline: none;
+        }
+      }
+      button {
+        padding: 10px;
+        width: 30%;
+        border: 1px solid #fff;
+        background-color: #fff;
+        color: #000;
+      }
     }
+
     .category {
       cursor: pointer;
       .store-image {

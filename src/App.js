@@ -7,13 +7,18 @@ import { googleLogin, appLogout } from "./login/googleLogin";
 import HomePage from "./pages/HomePage/HomePage";
 import updateUserToken from "./dbCalls/updateUserToken";
 import firebase from "firebase";
+import { getCookie, setCookie } from "./utils/utils";
 import LoadingOverlay from "react-loading-overlay";
+import FirstLogin from "./pages/FirstLogin/FirstLogin";
+
+//Modal Closer With Back Button Support (Uses EventDelegation, so it works for ajax loaded content too.)
 
 function App() {
   const [showHome, setShowHome] = React.useState(true);
   const [loader, setLoader] = React.useState(false);
   const [userId, setUserId] = React.useState();
-
+  const [userDetails, setUserDetails] = React.useState();
+  const [firstTime, setFirstTime] = React.useState(true);
   const loginWithGoogle = () => {
     setLoader(true);
     googleLogin()
@@ -34,11 +39,24 @@ function App() {
   };
 
   React.useEffect(() => {
+    if (getCookie("xwait-first").length) {
+      setFirstTime(false);
+    } else {
+      setFirstTime(true);
+      setCookie("firstTime");
+    }
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
+        console.log(user);
         setShowHome(true);
         setLoader(false);
         setUserId(user.uid);
+        const userData = {
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        };
+        setUserDetails(userData);
         const messaging = firebase.messaging();
         messaging
           .requestPermission()
@@ -46,7 +64,6 @@ function App() {
             return messaging.getToken();
           })
           .then(token => {
-            console.log(token);
             updateToken(user.uid, token);
           })
           .catch(err => {
@@ -63,10 +80,17 @@ function App() {
     appLogout();
     setShowHome(false);
   };
+
+  window.onpopstate = e => {
+    setShowHome(false);
+    setShowHome(true);
+  };
+
   return (
     <LoadingOverlay active={loader} spinner>
       <div className="app">
-        {!showHome && (
+        {firstTime && <FirstLogin exit={() => setFirstTime(false)} />}
+        {!showHome && !firstTime && (
           <>
             <header>
               <div className="mobile-header d-sm-flex d-xs-flex d-md-none d-lg-none"></div>
@@ -92,11 +116,12 @@ function App() {
             </div>
           </>
         )}
-        {showHome && (
+        {showHome && !firstTime && (
           <HomePage
             showBooking={showHome}
             logout={() => logout()}
             userId={userId}
+            userDetails={userDetails}
           />
         )}
       </div>

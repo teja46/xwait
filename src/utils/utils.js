@@ -1,7 +1,6 @@
 export const setCookie = value => {
-  console.log(value);
   document.cookie =
-    "xwaitUsr=" + value + "; expires=Thu, 18 Dec 2022 12:00:00 UTC; path=/";
+    "xwait-first=" + value + "; expires=Thu, 18 Dec 2022 12:00:00 UTC; path=/";
 };
 
 export const getCookie = cname => {
@@ -46,10 +45,18 @@ export const filterResults = (data, searchStr) => {
 
 export const sortSlotDetails = slotArr => {
   const arr = slotArr.sort(function(a, b) {
-    console.log(a);
     a = new Date(a.data.slotTime);
     b = new Date(b.data.slotTime);
     return a < b ? -1 : a > b ? 1 : 0;
+  });
+  return arr;
+};
+
+export const sortSlotBookingDetails = slotArr => {
+  const arr = slotArr.sort(function(a, b) {
+    a = new Date(a.slotTime);
+    b = new Date(b.slotTime);
+    return a > b ? -1 : a < b ? 1 : 0;
   });
   return arr;
 };

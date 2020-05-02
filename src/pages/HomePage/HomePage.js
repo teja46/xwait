@@ -1,20 +1,22 @@
 import React from "react";
 import "./HomePage.scss";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import { Button } from "react-bootstrap";
 import StoreCard from "../../components/StoreCard/StoreCard";
 import getStores from "../../dbCalls/getStores";
 import getCategories from "../../dbCalls/getCategories";
 import { Toast } from "react-bootstrap";
 // import geoLocation from "../../location/geolocation";
+import SearchResults from "../../components/SearchResults/SearchResults";
 import LoadingOverlay from "react-loading-overlay";
-import debounce from "debounce";
 import { filterResults } from "../../utils/utils";
 import {
   allCategoriesIcon,
   hospitalsIcon,
   storesIcon,
   beautyIcon,
-  restaurantIcon
+  restaurantIcon,
+  servicesIcon
 } from "../../assets/imageFiles";
 
 function HomePage(props) {
@@ -23,6 +25,9 @@ function HomePage(props) {
   const [allCategories, setAllCategories] = React.useState([]);
   const [categoryType, setCategoryType] = React.useState("All Categories");
   const [showToast, setShowToast] = React.useState(false);
+  const [searchText, setSearchText] = React.useState("");
+  const [showSearchResults, setShowSearchResults] = React.useState(false);
+  const [searchDataResults, setSearchDataResults] = React.useState([]);
   // geoLocation();
   React.useEffect(() => {
     async function fetchData() {
@@ -65,17 +70,18 @@ function HomePage(props) {
       });
   };
 
-  const debouncedFn = debounce(event => {
-    let searchString = event.target.value;
-    let res = filterResults(allCategories, searchString);
-    setStores(res);
-    setLoader(false);
-  }, 800);
-
-  const searchFields = event => {
-    event.persist();
+  const searchFields = () => {
     setLoader(true);
-    debouncedFn(event);
+    let res = filterResults(allCategories, searchText);
+    setSearchDataResults(res);
+    setLoader(false);
+    setShowSearchResults(true);
+  };
+
+  const searchForType = event => {
+    if (event.key === "Enter") {
+      searchFields();
+    }
   };
 
   return (
@@ -83,17 +89,30 @@ function HomePage(props) {
       <div className="home-page">
         <div className="home-page-section">
           <div className="header-component">
-            <HeaderComponent logout={props.logout} userId={props.userId} />
+            <HeaderComponent
+              logout={props.logout}
+              userId={props.userId}
+              userDetails={props.userDetails}
+            />
           </div>
           <div className="store-types d-flex flex-column justify-content-around">
             <div className="container">
-              <input
-                minLength={2}
-                placeholder="Search Stores, Hospitals, Cafes and more"
-                className="search-field"
-                onChange={event => searchFields(event)}
-              />
-              <div className="d-flex align-items-center justify-content-around">
+              <div className="search-section d-flex">
+                <input
+                  minLength={2}
+                  placeholder="Search Stores, Hospitals, Cafes and more"
+                  className="search-field"
+                  onKeyPress={event => searchForType(event)}
+                  onChange={event => setSearchText(event.target.value)}
+                />
+                <Button
+                  onClick={() => searchText.length && searchFields()}
+                  className="ml-1"
+                >
+                  Search
+                </Button>
+              </div>
+              <div className="d-none d-sm-none d-xs-none d-md-flex d-lg-flex align-items-center justify-content-around">
                 <div
                   className="d-flex align-items-center flex-column category"
                   onClick={() => getAllCategories()}
@@ -144,7 +163,7 @@ function HomePage(props) {
                       alt="categories"
                     />
                   </div>
-                  <div className="titles">Restaurants</div>
+                  <div className="titles">Food</div>
                 </div>
                 <div
                   className="d-flex align-items-center flex-column category"
@@ -158,6 +177,105 @@ function HomePage(props) {
                     />
                   </div>
                   <div className="titles">Beauty</div>
+                </div>
+                <div
+                  className="d-flex align-items-center flex-column category"
+                  onClick={() => searchFor("services")}
+                >
+                  <div>
+                    <img
+                      className="store-image"
+                      src={servicesIcon}
+                      alt="categories"
+                    />
+                  </div>
+                  <div className="titles">Services</div>
+                </div>
+              </div>
+              <div className="d-flex d-sm-flex d-md-none d-xs-flex d-lg-none align-items center justify-content-around mobile-categories">
+                <div className="d-flex align-items-center flex-column">
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => getAllCategories()}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={allCategoriesIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">All</div>
+                  </div>
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => searchFor("restaurants")}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={restaurantIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">Food</div>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center flex-column">
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => searchFor("stores")}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={storesIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">Stores</div>
+                  </div>
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => searchFor("hospitals")}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={hospitalsIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">Hospitals</div>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center flex-column">
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => searchFor("beauty")}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={allCategoriesIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">Beauty</div>
+                  </div>
+                  <div
+                    className="d-flex align-items-center flex-column category"
+                    onClick={() => searchFor("services")}
+                  >
+                    <div>
+                      <img
+                        className="store-image"
+                        src={servicesIcon}
+                        alt="categories"
+                      />
+                    </div>
+                    <div className="titles">Services</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -173,6 +291,7 @@ function HomePage(props) {
               <StoreCard
                 key={id}
                 storeDetails={store}
+                userDetails={props.userDetails}
                 userId={props.userId}
                 showToast={() => setShowToast(true)}
               />
@@ -197,6 +316,17 @@ function HomePage(props) {
             </div>
           </Toast.Body>
         </Toast>
+      )}
+      {showSearchResults && (
+        <SearchResults
+          show={showSearchResults}
+          searchText={searchText}
+          userId={props.userId}
+          stores={searchDataResults}
+          userDetails={props.userDetails}
+          showToast={() => setShowToast(true)}
+          onHide={() => setShowSearchResults(false)}
+        />
       )}
     </LoadingOverlay>
   );

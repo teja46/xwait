@@ -1,15 +1,26 @@
 import React from "react";
 import "./StoreCard.scss";
 import ratnadeepImage from "../../assets/images/ratnadeep.png";
-import ratingIcon from "../../assets/images/rating-icon.png";
 import locationIcon from "../../assets/images/location-icon.png";
 import timeIcon from "../../assets/images/time-icon.png";
 import StoreDetailsModal from "../StoreDetailsModal/StoreDetailsModal";
+import StarRatingComponent from "react-star-rating-component";
+// import $ from "jquery";
 
 function StoreCard(props) {
   const [showStoreDetailsModal, setShowStoreDetailsModal] = React.useState(
     false
   );
+
+  const displayShowDetailsModal = () => {
+    window.history.pushState(
+      { page: "showStoreDetails" },
+      "title 2",
+      "?page=1"
+    );
+    setShowStoreDetailsModal(true);
+  };
+
   const bookingSuccess = () => {
     setShowStoreDetailsModal(false);
     props.showToast();
@@ -19,7 +30,7 @@ function StoreCard(props) {
       <div className="store-card">
         <div
           className="row card-heading"
-          onClick={() => setShowStoreDetailsModal(true)}
+          onClick={() => displayShowDetailsModal()}
         >
           <div className="col-3 d-flex align-items-start">
             <img
@@ -35,12 +46,15 @@ function StoreCard(props) {
             </div>
             <div className="store-stats d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center justify-content-between">
-                <span className="store-rating d-flex align-items-center justify-content-between">
-                  <img src={ratingIcon} alt="rating" className="icons" />{" "}
-                  <span className="ratingDigit">
-                    {props.storeDetails.rating}
+                <div className="store-rating d-flex align-items-center justify-content-between">
+                  <StarRatingComponent
+                    value={props.storeDetails.rating}
+                    tarCount={5}
+                  />
+                  <span className="ml-2">
+                    {Math.floor(props.storeDetails.rating)}/ 5
                   </span>
-                </span>
+                </div>
                 <span className="store-distance d-flex align-items-center justify-content-between">
                   <img src={locationIcon} alt="rating" className="icons" />{" "}
                   <span className="ratingDigit">5 kms</span>
@@ -60,12 +74,19 @@ function StoreCard(props) {
         </div>
         <div className="card-action d-flex justify-content-between align-items-center">
           <div className="sponsored-section">Sponsored</div>
+          <button
+            className="animated-button"
+            onClick={() => displayShowDetailsModal()}
+          >
+            Book Slot
+          </button>
         </div>
       </div>
 
       {showStoreDetailsModal && (
         <StoreDetailsModal
           storeDetails={props.storeDetails}
+          userDetails={props.userDetails}
           userId={props.userId}
           close={() => setShowStoreDetailsModal(false)}
           bookingSuccess={() => bookingSuccess()}

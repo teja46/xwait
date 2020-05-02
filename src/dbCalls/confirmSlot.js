@@ -11,7 +11,11 @@ const confirmSlot = async slotDetails => {
     serviceType: slotDetails.serviceType,
     userId: slotDetails.userId,
     storeName: slotDetails.storeName,
-    storeAddress: slotDetails.storeAddress
+    storeAddress: slotDetails.storeAddress,
+    number: slotDetails.number,
+    instructions: slotDetails.instructions,
+    userName: slotDetails.userName,
+    userEmail: slotDetails.userEmail
   };
   console.log(slotObj);
   const bookedSlot = await axios.post(`${apiUrl}/bookSlot`, slotObj);

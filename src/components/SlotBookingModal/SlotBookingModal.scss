@@ -126,16 +126,22 @@
   transform: none !important;
 
   .confirmation-details {
-    padding: 20px;
+    .modal-header {
+      background-color: #626cfe;
+      color: #ffffff;
+    }
     .confirmation-heading {
       font-size: 20px;
       font-weight: bold;
-      margin-bottom: 20px;
     }
 
     .date-time {
       font-size: 20px;
       font-weight: bold;
+    }
+
+    textarea {
+      resize: none;
     }
   }
   .super-market-details {

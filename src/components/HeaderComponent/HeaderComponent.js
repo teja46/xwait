@@ -5,10 +5,12 @@ import "./HeaderComponent.scss";
 import { Overlay, Button, Modal, Nav } from "react-bootstrap";
 import getBookedSlots from "../../dbCalls/getBookedSlots";
 import moment from "moment";
-import redeemBooking from "../../dbCalls/redeemBooking";
+// import redeemBooking from "../../dbCalls/redeemBooking";
+import { sortSlotBookingDetails } from "../../utils/utils";
 import cancelBooking from "../../dbCalls/cancelBooking";
 import DisplayFeedbackModal from "../DisplayFeedback/DisplayFeedback";
 import LoadingOverlay from "react-loading-overlay";
+import ContactUs from "../ContactUs/ContactUs";
 
 function HeaderComponent(props) {
   const userMenu = React.useRef(null);
@@ -17,16 +19,23 @@ function HeaderComponent(props) {
   const [loader, setLoader] = React.useState(false);
   const [bookings, setBookings] = React.useState();
   const [displayFeedback, setDisplayFeedback] = React.useState(false);
+  const [showContactUs, setShowContactUs] = React.useState(false);
   const [selectedBooking, setSelectedBooking] = React.useState();
 
   const getBookings = type => {
     setLoader(true);
     setShowBookings(true);
+    window.history.pushState(
+      { page: "showMyBookingModal" },
+      "title 1",
+      "?page=1"
+    );
     getBookedSlots(props.userId, type)
       .then(res => {
+        const sortedDetails = sortSlotBookingDetails(res.data);
         console.log(res);
         setLoader(false);
-        setBookings(res.data);
+        setBookings(sortedDetails);
       })
       .catch(err => {
         setLoader(false);
@@ -34,19 +43,6 @@ function HeaderComponent(props) {
       });
   };
 
-  const completeBooking = id => {
-    setLoader(true);
-    redeemBooking(id)
-      .then(res => {
-        setLoader(false);
-        alert("Booking Redeemed");
-        setShowBookings(false);
-      })
-      .catch(err => {
-        setLoader(false);
-        alert(err.message);
-      });
-  };
   const cancel = booking => {
     setLoader(true);
     cancelBooking(booking)
@@ -64,18 +60,23 @@ function HeaderComponent(props) {
   const showFeedback = booking => {
     setShowBookings(false);
     setDisplayFeedback(true);
+    window.history.pushState(
+      { page: "showFeedbackModal" },
+      "title 7",
+      "?page=1"
+    );
     setSelectedBooking(booking);
   };
 
   return (
     <div className=" d-flex align-items-center justify-content-between container">
-      <div className=" d-flex align-items-center justify-content-between">
+      <div className="  d-flex align-items-center">
         <img src={xWaitLogo} alt="x-wait-img" className="x-wait-logo" />
         <div>Hyderabad</div>
       </div>
       <div>
         <img
-          src={userLogo}
+          src={props.userDetails ? props.userDetails.photoURL : userLogo}
           alt="user"
           className="user-logo"
           ref={userMenu}
@@ -91,8 +92,25 @@ function HeaderComponent(props) {
       >
         <div className="text-center user-menu">
           <div>
-            <Button variant="link" onClick={() => getBookings("Current")}>
+            <Button
+              variant="link"
+              onClick={() => {
+                setShowOverlay(false);
+                getBookings("Current");
+              }}
+            >
               My Bookings
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="link"
+              onClick={() => {
+                setShowOverlay(false);
+                setShowContactUs(true);
+              }}
+            >
+              Contact Us
             </Button>
           </div>
           <div>
@@ -105,6 +123,7 @@ function HeaderComponent(props) {
       <Modal
         show={showBookings}
         rootClose={true}
+        id="bookings-modal-show"
         onHide={() => setShowBookings(false)}
         centered
         className="bookings-modal"
@@ -184,13 +203,14 @@ function HeaderComponent(props) {
                               </Button>
                             </div>
                           )}
-                        {booking.bookingStatus === "Accepted" && (
+                        {/* commenting this feature for now */}
+                        {/* {booking.bookingStatus === "Accepted" && (
                           <div>
                             <Button onClick={() => completeBooking(booking.id)}>
                               Redeem Booking
                             </Button>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   ))}
@@ -203,7 +223,15 @@ function HeaderComponent(props) {
         <DisplayFeedbackModal
           show={displayFeedback}
           booking={selectedBooking}
+          userDetails={props.userDetails}
           hide={() => setDisplayFeedback(false)}
+        />
+      )}
+      {showContactUs && (
+        <ContactUs
+          show={showContactUs}
+          userDetails={props.userDetails}
+          onHide={() => setShowContactUs(false)}
         />
       )}
     </div>

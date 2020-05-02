@@ -19,7 +19,7 @@ button.close {
   }
   .mobile-logo {
     img {
-      height: 150px;
+      height: 80px;
     }
   }
   .login-button-controls {
@@ -71,5 +71,24 @@ button.animated-button {
 
   &:hover::after {
     transform: scaleY(1);
+  }
+}
+
+.modal-header {
+  background-color: #626cfe !important;
+  color: #ffffff !important;
+}
+
+.modal-content {
+  top: 60px !important;
+}
+
+textarea {
+  resize: none !important;
+}
+
+.dv-star-rating {
+  label {
+    margin-bottom: 0;
   }
 }
