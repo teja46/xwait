@@ -25,6 +25,7 @@ export default function SearchResults(props) {
               storeDetails={store}
               userDetails={props.userDetails}
               userId={props.userId}
+              userLocation={props.userLocation}
               showToast={() => props.setShowToast(true)}
             />
           ))}
@@ -34,7 +35,6 @@ export default function SearchResults(props) {
         <Button variant="secondary" onClick={() => props.onHide()}>
           Close
         </Button>
-        <Button variant="primary">Save changes</Button>
       </Modal.Footer>
     </Modal>
   );

@@ -60,3 +60,7 @@ export const sortSlotBookingDetails = slotArr => {
   });
   return arr;
 };
+
+export const ellipsifyText = (text, charLength) => {
+  return text.substr(0, charLength) + (text.length > charLength ? "..." : "");
+};

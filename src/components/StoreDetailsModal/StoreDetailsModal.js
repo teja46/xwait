@@ -1,5 +1,6 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+import { backIcon } from "../../assets/imageFiles";
 import "./StoreDetailsModal.scss";
 import getServices from "../../dbCalls/getServices";
 import LoadingOverlay from "react-loading-overlay";
@@ -42,9 +43,9 @@ export default function StoreDetailsModal(props) {
     setShowReviews(true);
   };
 
-  const bookingSuccess = () => {
+  const bookingSuccess = res => {
     setShowBooking(false);
-    props.bookingSuccess();
+    props.bookingSuccess(res);
   };
 
   return (
@@ -55,8 +56,14 @@ export default function StoreDetailsModal(props) {
       className="store-details"
       backdropClassName="store-details-backdrop"
     >
-      <Modal.Header closeButton>
-        <Modal.Title>{props.storeDetails.name}</Modal.Title>
+      <Modal.Header>
+        <img
+          src={backIcon}
+          className="back-icon"
+          alt="back"
+          onClick={() => props.close()}
+        />
+        <Modal.Title>Select Service</Modal.Title>
       </Modal.Header>
       <LoadingOverlay active={loader} spinner>
         <Modal.Body>
@@ -66,6 +73,7 @@ export default function StoreDetailsModal(props) {
                 {props.storeDetails.name}{" "}
                 <div className="store-rating d-flex">
                   <StarRatingComponent
+                    name="comp3"
                     value={props.storeDetails.rating}
                     tarCount={5}
                   />
@@ -81,7 +89,10 @@ export default function StoreDetailsModal(props) {
             <div>
               <div>{props.storeDetails.storeRating}</div>
               <div className="store-timings">
-                <div className="review-count" onClick={() => showReviewModal()}>
+                <div
+                  className="review-count"
+                  onClick={() => reviewCount > 0 && showReviewModal()}
+                >
                   {reviewCount} Reviews
                 </div>
                 <span>{props.storeDetails.startTime}</span>-
@@ -119,11 +130,6 @@ export default function StoreDetailsModal(props) {
               </div>
             ))}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => props.close()}>
-            Close
-          </Button>
-        </Modal.Footer>
         <SlotBookingModal
           showBooking={showBooking}
           userDetails={props.userDetails}
@@ -131,7 +137,7 @@ export default function StoreDetailsModal(props) {
           service={serviceDetails}
           storeDetails={props.storeDetails}
           onHide={() => setShowBooking(false)}
-          bookingSuccess={() => bookingSuccess()}
+          bookingSuccess={res => bookingSuccess(res)}
         />
         {showReviews && (
           <DisplayStoreFeedback

@@ -16,11 +16,13 @@
     "react-bootstrap": "^1.0.0",
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
+    "react-dropdown-select": "^4.3.1",
     "react-horizontal-datepicker": "^2.0.2",
     "react-loading-overlay": "^1.0.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-select-search": "^1.1.6",
     "react-star-rating-component": "^1.4.1",
     "recompose": "^0.30.0",
     "redux": "^4.0.5"

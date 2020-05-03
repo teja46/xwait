@@ -1,0 +1,18 @@
+.booking-confirmed {
+  font-size: 14px;
+  .booking-slot-timing-section {
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+    .date-time {
+      width: 49%;
+      border-right: 1px solid #f2f2f2;
+    }
+  }
+  .border-top {
+    border-top: 1px solid #f2f2f2;
+  }
+
+  .border-bottom {
+    border-bottom: 1px solid #f2f2f2;
+  }
+}

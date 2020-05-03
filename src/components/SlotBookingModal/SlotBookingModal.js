@@ -5,6 +5,7 @@ import "./SlotBookingModal.scss";
 import DatePicker from "react-horizontal-datepicker";
 import getSlots from "../../dbCalls/getSlots";
 import confirmSlot from "../../dbCalls/confirmSlot";
+import { backIcon } from "../../assets/imageFiles";
 import moment from "moment";
 import { sortSlotDetails } from "../../utils/utils";
 import LoadingOverlay from "react-loading-overlay";
@@ -36,6 +37,7 @@ function SlotBookingModal(props) {
   };
 
   const confirmBooking = (slotData, storeDetails) => {
+    console.log(props);
     setLoader(true);
     const slotDetails = {
       slotId: slotData.slotId,
@@ -47,6 +49,8 @@ function SlotBookingModal(props) {
       storeName: storeDetails.name,
       storeAddress: storeDetails.storeAddress,
       userId: props.userId,
+      storeLatitude: props.storeDetails.latitude,
+      storeLongitude: props.storeDetails.longitude,
       userName,
       userEmail,
       number,
@@ -56,7 +60,7 @@ function SlotBookingModal(props) {
       .then(res => {
         setShowConfirmation(false);
         setLoader(false);
-        props.bookingSuccess();
+        props.bookingSuccess(res);
       })
       .catch(err => {
         setLoader(false);
@@ -88,7 +92,7 @@ function SlotBookingModal(props) {
           id="slot-booking-show"
           show={props.showBooking}
           centered
-          onHide={props.onHide}
+          onHide={() => props.onHide()}
           size="xl"
           className={`slot-selection-modal ${
             showConfirmation ? "confirmation-show" : ""
@@ -98,13 +102,18 @@ function SlotBookingModal(props) {
           }`}
         >
           <LoadingOverlay active={loader} spinner>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                {props.service.serviceDetails.serviceType}
-              </Modal.Title>
+            <Modal.Header>
+              <img
+                src={backIcon}
+                className="back-icon"
+                alt="back"
+                onClick={() => props.onHide()}
+              />
+              <Modal.Title>Select Slot</Modal.Title>
             </Modal.Header>
             <Modal.Body className="d-flex justify-content-center align-items-start modal-body">
               <div className="slot-card">
+                <div>{props.service.serviceDetails.serviceType}</div>
                 <div className="super-market-details d-flex align-items-center">
                   <div className="image-section">
                     <img
@@ -162,8 +171,14 @@ function SlotBookingModal(props) {
         <LoadingOverlay active={loader} spinner>
           <div className="confirmation d-flex flex-column">
             <div className="confirmation-details d-flex flex-column">
-              <Modal.Header closeButton>
-                <div className="confirmation-heading">Confirm your booking</div>
+              <Modal.Header>
+                <img
+                  src={backIcon}
+                  className="back-icon"
+                  alt="back"
+                  onClick={() => setShowConfirmation(false)}
+                />
+                <Modal.Title>Confirm your booking</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <div className="super-market-details d-flex align-items-start">
@@ -184,6 +199,12 @@ function SlotBookingModal(props) {
                   </div>
                 </div>
                 <div className="date-time">
+                  <div>
+                    Service:{" "}
+                    {props.service &&
+                      props.service.serviceDetails &&
+                      props.service.serviceDetails.serviceType}
+                  </div>
                   <div>
                     Booking Date:{" "}
                     {selectedSlot &&
@@ -225,7 +246,7 @@ function SlotBookingModal(props) {
                     <Form.Control
                       as="textarea"
                       rows="3"
-                      maxlength={120}
+                      maxLength={120}
                       placeholder="Any special Instructions to store?"
                       onChange={e => setInstructions(e.target.value)}
                     />

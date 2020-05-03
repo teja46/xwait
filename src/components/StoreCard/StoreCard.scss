@@ -13,9 +13,6 @@
       padding: 10px 15px;
       padding-bottom: 0px;
 
-      > div {
-        padding: 0 12px 5px 5px;
-      }
       .store-image {
         width: 100%;
       }
@@ -24,41 +21,33 @@
         .store-name {
           color: #3b3e50;
           font-size: 16px;
+          font-weight: bold;
         }
-
         .store-location {
           font-size: 12px;
-          font-weight: bold;
-          margin-bottom: 15px;
+        }
+      }
+      .store-desc {
+        width: 100%;
+        font-size: 12px;
+        padding: 5px 10px;
+        .icons {
+          width: 15px;
+          height: 15px;
+          margin-right: 5px;
         }
 
-        .store-stats {
-          margin: 5px 0;
-          font-size: 10px;
-
-          .icons {
-            width: 15px;
-            height: 15px;
-            margin-right: 2px;
-          }
-          .store-rating {
-            margin-right: 15px;
-          }
-
-          .store-timings {
-            span {
-              margin-left: 5px;
-            }
-          }
+        .store-rating-distance {
+          width: 50%;
         }
+      }
 
-        .store-description {
-          font-size: 11px;
-          border-top: 2px solid #f2f2f2;
-          padding: 5px;
-          margin: 10px 0 0 0;
-          padding-left: 0;
-        }
+      .store-description {
+        font-size: 11px;
+        border-top: 2px solid #f9f9f9;
+        padding: 10px;
+        margin: 10px;
+        width: 100%;
       }
     }
 

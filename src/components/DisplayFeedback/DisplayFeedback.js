@@ -4,6 +4,7 @@ import "./DisplayFeedback.scss";
 import submitFeedback from "../../dbCalls/submitFeedback";
 import LoadingOverlay from "react-loading-overlay";
 import StarRatingComponent from "react-star-rating-component";
+import { backIcon } from "../../assets/imageFiles";
 
 export default function DisplayFeedback({ hide, booking, show, userDetails }) {
   const [name, setName] = React.useState(userDetails.name);
@@ -50,7 +51,15 @@ export default function DisplayFeedback({ hide, booking, show, userDetails }) {
       className="bookings-modal"
     >
       <LoadingOverlay active={loader} spinner>
-        <Modal.Header closeButton>{booking.storeName}</Modal.Header>
+        <Modal.Header closeButton>
+          <img
+            src={backIcon}
+            className="back-icon"
+            alt="back"
+            onClick={() => hide()}
+          />
+          <Modal.Title>Give Feedback</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
           <div>{booking.storeName}</div>
           <div>{booking.storeAddress}</div>

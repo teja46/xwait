@@ -11,6 +11,10 @@ import cancelBooking from "../../dbCalls/cancelBooking";
 import DisplayFeedbackModal from "../DisplayFeedback/DisplayFeedback";
 import LoadingOverlay from "react-loading-overlay";
 import ContactUs from "../ContactUs/ContactUs";
+// import data from "../../data/pincodes.json";
+import "./SelectSearch.scss";
+import { backIcon } from "../../assets/imageFiles";
+// import SelectSearch from "react-select-search";
 
 function HeaderComponent(props) {
   const userMenu = React.useRef(null);
@@ -22,6 +26,7 @@ function HeaderComponent(props) {
   const [showContactUs, setShowContactUs] = React.useState(false);
   const [selectedBooking, setSelectedBooking] = React.useState();
 
+  React.useState(() => {}, []);
   const getBookings = type => {
     setLoader(true);
     setShowBookings(true);
@@ -72,7 +77,15 @@ function HeaderComponent(props) {
     <div className=" d-flex align-items-center justify-content-between container">
       <div className="  d-flex align-items-center">
         <img src={xWaitLogo} alt="x-wait-img" className="x-wait-logo" />
-        <div>Hyderabad</div>
+        {/* <SelectSearch
+          options={data}
+          onChange={value => localStorage.setItem("value", value)}
+          defaultValue={localStorage.getItem("value")}
+          name="language"
+          value={localStorage.getItem("value")}
+          placeholder="Area"
+          search={true}
+        /> */}
       </div>
       <div>
         <img
@@ -129,8 +142,14 @@ function HeaderComponent(props) {
         className="bookings-modal"
       >
         <LoadingOverlay active={loader} spinner>
-          <Modal.Header closeButton>
-            <h3 className="confirmation-heading">Your Bookings</h3>
+          <Modal.Header>
+            <img
+              src={backIcon}
+              className="back-icon"
+              alt="back"
+              onClick={() => setShowBookings(false)}
+            />
+            <Modal.Title>Your Bookings</Modal.Title>
           </Modal.Header>
           <div className="confirmation d-flex flex-column">
             <div className="tabs-pane">
@@ -154,7 +173,7 @@ function HeaderComponent(props) {
               </Nav>
             </div>
             <div className="confirmation-details d-flex flex-column">
-              <div>
+              <div className="p-4">
                 {bookings && !bookings.length && (
                   <div>Sorry!! You don't have any items booked</div>
                 )}

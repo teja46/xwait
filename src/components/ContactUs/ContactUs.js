@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Button, Form, Dropdown } from "react-bootstrap";
 import sendContactDetails from "../../dbCalls/sendContactDetails";
 import LoadingOverlay from "react-loading-overlay";
+import { backIcon } from "../../assets/imageFiles";
 
 export default function ContactUs(props) {
   const [queryType, setQueryType] = React.useState("Enquiry");
@@ -34,7 +35,13 @@ export default function ContactUs(props) {
   return (
     <Modal show={props.show} onHide={() => props.onHide()}>
       <LoadingOverlay active={loader} spinner>
-        <Modal.Header closeButton>
+        <Modal.Header>
+          <img
+            src={backIcon}
+            className="back-icon"
+            alt="back"
+            onClick={() => props.onHide()}
+          />
           <Modal.Title>Contact Us</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -89,15 +96,10 @@ export default function ContactUs(props) {
               />
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => props.onHide()}>
-            Close
-          </Button>
           <Button variant="primary" onClick={() => sendContactInfo()}>
             Contact Us
           </Button>
-        </Modal.Footer>
+        </Modal.Body>
       </LoadingOverlay>
     </Modal>
   );

@@ -9,6 +9,8 @@ import img1 from "./images/iPhone X-XS – 64.png";
 import img2 from "./images/iPhone X-XS – 65.png";
 import img3 from "./images/iPhone X-XS – 66.png";
 import img4 from "./images/iPhone X-XS – 68.png";
+import searchIcon from "./images/searchIcon.png";
+import backIcon from "./images/back-icon.png";
 
 export {
   allCategoriesIcon,
@@ -21,5 +23,7 @@ export {
   img1,
   img2,
   img3,
-  img4
+  img4,
+  searchIcon,
+  backIcon
 };

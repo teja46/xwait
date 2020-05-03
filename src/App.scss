@@ -77,10 +77,23 @@ button.animated-button {
 .modal-header {
   background-color: #626cfe !important;
   color: #ffffff !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.modal-dialog {
+  margin: 0 !important;
 }
 
 .modal-content {
-  top: 60px !important;
+  min-height: 100vh;
+}
+
+.back-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
 textarea {

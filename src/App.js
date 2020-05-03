@@ -31,7 +31,7 @@ function App() {
   const updateToken = (userId, token) => {
     updateUserToken(userId, token)
       .then(res => {
-        console.log("updated");
+        // console.log("updated");
       })
       .catch(err => {
         console.log("Error!!");
@@ -47,7 +47,6 @@ function App() {
     }
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        console.log(user);
         setShowHome(true);
         setLoader(false);
         setUserId(user.uid);

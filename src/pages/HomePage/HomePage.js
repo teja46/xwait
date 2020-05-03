@@ -1,15 +1,16 @@
 import React from "react";
 import "./HomePage.scss";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
-import { Button } from "react-bootstrap";
 import StoreCard from "../../components/StoreCard/StoreCard";
 import getStores from "../../dbCalls/getStores";
 import getCategories from "../../dbCalls/getCategories";
-import { Toast } from "react-bootstrap";
-// import geoLocation from "../../location/geolocation";
+import { searchIcon } from "../../assets/imageFiles";
 import SearchResults from "../../components/SearchResults/SearchResults";
+import BookingConfirmed from "../../components/BookingConfirmed/BookingConfirmed";
 import LoadingOverlay from "react-loading-overlay";
 import { filterResults } from "../../utils/utils";
+import getLocation from "../../dbCalls/getLocation";
+
 import {
   allCategoriesIcon,
   hospitalsIcon,
@@ -28,9 +29,13 @@ function HomePage(props) {
   const [searchText, setSearchText] = React.useState("");
   const [showSearchResults, setShowSearchResults] = React.useState(false);
   const [searchDataResults, setSearchDataResults] = React.useState([]);
-  // geoLocation();
+  const [userLocation, setUserLocation] = React.useState();
+  const [bookingDetails, setBookingDetails] = React.useState();
+  //
   React.useEffect(() => {
     async function fetchData() {
+      const { coords } = await getLocation();
+      setUserLocation(coords);
       getStores()
         .then(res => {
           setStores(res.data);
@@ -84,20 +89,27 @@ function HomePage(props) {
     }
   };
 
+  const showConfirmation = res => {
+    console.log(res);
+    debugger;
+    setShowToast(true);
+    setBookingDetails(res.data);
+  };
+
   return (
     <LoadingOverlay active={loader} spinner>
       <div className="home-page">
         <div className="home-page-section">
           <div className="header-component">
             <HeaderComponent
-              logout={props.logout}
+              logout={() => props.logout()}
               userId={props.userId}
               userDetails={props.userDetails}
             />
           </div>
-          <div className="store-types d-flex flex-column justify-content-around">
+          <div className="store-types d-flex flex-column justify-content-around pt-4 pb-4">
             <div className="container">
-              <div className="search-section d-flex">
+              <div className="search-section d-flex pb-4">
                 <input
                   minLength={2}
                   placeholder="Search Stores, Hospitals, Cafes and more"
@@ -105,14 +117,14 @@ function HomePage(props) {
                   onKeyPress={event => searchForType(event)}
                   onChange={event => setSearchText(event.target.value)}
                 />
-                <Button
+                <img
+                  src={searchIcon}
+                  alt="search"
+                  className="search-icon"
                   onClick={() => searchText.length && searchFields()}
-                  className="ml-1"
-                >
-                  Search
-                </Button>
+                />
               </div>
-              <div className="d-none d-sm-none d-xs-none d-md-flex d-lg-flex align-items-center justify-content-around">
+              <div className="d-none d-sm-none d-xs-none d-md-flex d-lg-flex align-items-center justify-content-around mt-4">
                 <div
                   className="d-flex align-items-center flex-column category"
                   onClick={() => getAllCategories()}
@@ -192,7 +204,7 @@ function HomePage(props) {
                   <div className="titles">Services</div>
                 </div>
               </div>
-              <div className="d-flex d-sm-flex d-md-none d-xs-flex d-lg-none align-items center justify-content-around mobile-categories">
+              <div className="d-flex d-sm-flex d-md-none d-xs-flex d-lg-none align-items-center justify-content-around mobile-categories">
                 <div className="d-flex align-items-center flex-column">
                   <div
                     className="d-flex align-items-center flex-column category"
@@ -285,21 +297,22 @@ function HomePage(props) {
         <div className="container showPlaces">
           <div className="all-places d-flex">{categoryType}</div>
 
-          <div className="cards-section row d-flex justify-content-center">
+          <div className="cards-section row d-flex justify-content-start">
             {stores.length === 0 && !loader && "Sorry!! No Results Found!!"}
             {stores.map((store, id) => (
               <StoreCard
                 key={id}
                 storeDetails={store}
                 userDetails={props.userDetails}
+                userLocation={userLocation}
                 userId={props.userId}
-                showToast={() => setShowToast(true)}
+                showToast={res => showConfirmation(res)}
               />
             ))}{" "}
           </div>
         </div>
       </div>
-      {showToast && (
+      {/* {showToast && (
         <Toast
           show={showToast}
           className="success-booking"
@@ -316,12 +329,21 @@ function HomePage(props) {
             </div>
           </Toast.Body>
         </Toast>
+      )} */}
+      {showToast && (
+        <BookingConfirmed
+          show={showToast}
+          bookingDetails={bookingDetails}
+          userLocation={userLocation}
+          close={() => setShowToast(false)}
+        />
       )}
       {showSearchResults && (
         <SearchResults
           show={showSearchResults}
           searchText={searchText}
           userId={props.userId}
+          userLocation={userLocation}
           stores={searchDataResults}
           userDetails={props.userDetails}
           showToast={() => setShowToast(true)}
